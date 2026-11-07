@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Muha Meds Store — Next.js storefront
 
-## Getting Started
+A standalone Next.js 15 (App Router, TypeScript, Tailwind v4) rebuild of muhamedstore.com.
+No WordPress: catalog and page content live in `src/data/*.json`, orders are handled by
+the app's own API, and customers pay manually (Zelle | Venmo, Cashapp or crypto, Chime).
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in SMTP so order emails are actually sent
+npm run dev                  # http://localhost:3000
+npm run build && npm start   # production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires Node 20+. The production server must have a **persistent, writable** `DATA_DIR`
+(default `./var`) — that is where orders, contact messages and pending reviews are saved.
+Works on a VPS, Docker, or a Hostinger Node.js app. On serverless hosts (Vercel/Netlify)
+the disk is wiped between requests: replace `src/lib/store.ts` with a database first.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How orders work
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Cart and wishlist live in the browser (`localStorage`).
+2. `/api/quote` re-prices every cart line from the catalog (client prices are never
+   trusted), applies coupons and shipping. The cart and checkout show these server totals.
+3. `/api/orders` validates the checkout form, re-prices again, saves the order to
+   `DATA_DIR/orders.json`, and emails the customer and `STORE_EMAIL`.
+4. The customer lands on `/order-received/<number>?key=<secret>` with payment instructions.
+5. `/order-tracking` looks an order up by order number + billing email.
 
-## Learn More
+To change an order's status, edit `status` in `var/orders.json`
+(`pending-payment` → `processing` → `shipped` → `completed`, or `cancelled`).
 
-To learn more about Next.js, take a look at the following resources:
+Pricing rules (`src/data/site.json`):
+- `shipping.flatRate` = $10.00, free when the order (after discount) reaches `shipping.freeOver` = $500.
+- `coupons`: `WDPILLS23` = 10% off, first order per email only.
+- `paymentMethods[].instructions` (optional) — e.g. your Zelle/CashApp handle. `{order}` is replaced
+  with the order number. Without it customers are told the details will be emailed.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Editing content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Products, categories, pages: `src/data/products.json`, `categories.json`, `pages.json`.
+- Menus, footer, home page copy, coupons, shipping, payment methods: `src/data/site.json`.
+- Images: `public/media/…`.
+- Real customer testimonials: add to `site.json → testimonials` (`{ name, location, text }`); the
+  home-page section appears automatically.
+- New reviews submitted on the site go to `var/reviews-pending.json` for moderation; to publish
+  one, add it to the product's `reviews` array.
 
-## Deploy on Vercel
+`scripts/extract.mjs` regenerates the data from the HTTrack copy of the old site
+(`node scripts/extract.mjs "<path to mirror>/muhamedstore.com"`). Running it overwrites
+manual edits in `src/data`, so only use it for the initial import.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## SEO / migration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Old WordPress URLs redirect permanently (see `next.config.ts`): trailing slashes,
+`/refund_returns/`, `/my-account/`, `/shop/page/N/`, `/wp-content/uploads/…` → `/media/…`, feeds.
+`/sitemap.xml` and `/robots.txt` are generated. Set `NEXT_PUBLIC_SITE_URL` in production.
+
+## Security
+
+- Server-side validation (zod) on every API; prices recomputed server-side.
+- Honeypot field + per-IP rate limits on orders, contact and reviews (validation failures
+  don't consume the strict quota, so typos never lock customers out).
+- Reviews containing links are rejected (the old site's spam reviews were all link drops);
+  all reviews are moderated.
+- Order confirmation pages require a 128-bit secret key; order lookup requires the billing email.
+- Security headers (HSTS, nosniff, frame options, referrer and permissions policy).
+- No WordPress, no PHP, no plugins — removes the attack surface the old site was compromised through.
