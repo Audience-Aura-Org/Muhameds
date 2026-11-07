@@ -29,16 +29,16 @@ export default async function ContentPage({ params }: Props) {
   return (
     <div className="container-x pt-8 sm:pt-12">
       <header className="mx-auto max-w-3xl">
-        <h1 className="h-display text-4xl sm:text-5xl">{p.title}</h1>
+        <h1 className="h-display text-4xl leading-[1.05] sm:text-[56px]">{p.title}</h1>
       </header>
       <div className={`mx-auto mt-10 grid gap-10 ${isContact ? 'max-w-6xl lg:grid-cols-[1fr_1fr]' : 'max-w-3xl'}`}>
         <div className="rich" dangerouslySetInnerHTML={{ __html: body }} />
         {isContact && (
           <div className="space-y-6">
             <ContactForm />
-            <ul className="space-y-3 rounded-[2rem] border border-line bg-white p-6 text-sm">
-              <li className="flex items-center gap-3"><IconPin className="text-sage-700" />{site.address}</li>
-              <li><a href={`mailto:${site.email}`} className="flex items-center gap-3 hover:underline"><IconMail className="text-sage-700" />{site.email}</a></li>
+            <ul className="space-y-3 surface p-6 text-sm">
+              <li className="flex items-center gap-3"><IconPin className="text-brand-700" />{site.address}</li>
+              <li><a href={`mailto:${site.email}`} className="flex items-center gap-3 hover:underline"><IconMail className="text-brand-700" />{site.email}</a></li>
             </ul>
           </div>
         )}

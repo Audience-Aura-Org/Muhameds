@@ -37,6 +37,36 @@ Pricing rules (`data/site.json`):
 - `paymentMethods[].instructions` (optional) — e.g. your Zelle/CashApp handle. `{order}` is replaced
   with the order number. Without it customers are told the details will be emailed.
 
+## Email (Titan Mail)
+
+Order confirmations, new-order alerts and contact-form messages are sent through Titan's SMTP server.
+
+1. In Titan, create the mailbox the store sends from (e.g. `info@muhamedstore.com`).
+2. Put its credentials in `.env.local` (and in your hosting provider's environment variables):
+
+   ```
+   SMTP_HOST=smtp.titan.email
+   SMTP_PORT=465
+   SMTP_SECURE=true
+   SMTP_USER=info@muhamedstore.com
+   SMTP_PASS=<mailbox password>
+   STORE_EMAIL=info@muhamedstore.com   # inbox that receives order + contact notifications
+   MAIL_FROM="Muha Meds Store"         # display name only
+   ```
+
+   Titan only accepts mail sent *from* the mailbox you log in with, so the From address is
+   always `SMTP_USER`. If your host blocks port 465, use `SMTP_PORT=587` and `SMTP_SECURE=false`
+   (STARTTLS; TLS is still required).
+3. Check it: `npm run mail:test` (or `npm run mail:test -- you@example.com`) logs in and sends a test email.
+4. Add these DNS records at your domain registrar so mail isn't flagged as spam:
+   - **MX**: as shown in Titan's admin panel (usually `mx1.titan.email` priority 10, `mx2.titan.email` priority 20)
+   - **SPF** (TXT on `@`): `v=spf1 include:spf.titan.email ~all` — if you already have an SPF record, add `include:spf.titan.email` to it rather than creating a second one
+   - **DKIM** (TXT): copy the record from Titan admin → Domain → DKIM
+   - **DMARC** (TXT on `_dmarc`): start with `v=DMARC1; p=none; rua=mailto:info@muhamedstore.com`
+
+Without `SMTP_USER`/`SMTP_PASS`, emails are written to the server log instead of being sent.
+Email failures never block an order: the order is saved first, and sends time out after ~20 seconds.
+
 ## Editing content
 
 - Products, categories, pages: `data/products.json`, `categories.json`, `pages.json`.

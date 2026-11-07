@@ -5,7 +5,15 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useCartCount, useWishlist } from '@/lib/client-store';
 import type { NavItem } from '@/lib/types';
-import { IconBag, IconChevronDown, IconClose, IconHeart, IconMenu, IconSearch } from './Icons';
+import { IconBag, IconChevronDown, IconHeart, IconMenu, IconSearch } from './Icons';
+import MobileMenu from './MobileMenu';
+
+/** Splits "…use promo code: CODE" so the code can be highlighted. */
+function PromoText({ text }: { text: string }) {
+  const m = text.match(/^(.*?:\s*)([A-Z0-9-]{3,})\s*$/);
+  if (!m) return <>{text}</>;
+  return <>{m[1]}<span className="ml-1 rounded-md bg-lime px-1.5 py-0.5 font-mono text-[12px] font-bold tracking-wider text-ink">{m[2]}</span></>;
+}
 
 export default function Header({ nav, promo, logo, name }: { nav: NavItem[]; promo: string; logo: string; name: string }) {
   const count = useCartCount();
@@ -25,11 +33,11 @@ export default function Header({ nav, promo, logo, name }: { nav: NavItem[]; pro
   }, []);
   useEffect(() => { if (searchOpen) searchRef.current?.focus(); }, [searchOpen]);
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { setMenuOpen(false); setSearchOpen(false); } };
     window.addEventListener('keydown', esc);
     return () => window.removeEventListener('keydown', esc);
-  }, [menuOpen]);
+  }, []);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href.split('?')[0]));
 
@@ -41,32 +49,35 @@ export default function Header({ nav, promo, logo, name }: { nav: NavItem[]; pro
 
   return (
     <>
-      <div className="bg-ink text-center text-[13px] font-medium tracking-wide text-white">
-        {/* the old site also used a shorter variant on mobile */}
-        <p className="container-x hidden py-2 sm:block">{promo}</p>
-        <p className="container-x py-2 sm:hidden">{promo.replace(/^First purchase with a /i, '')}</p>
+      <div className="bg-ink text-center text-[13px] font-medium text-white/90">
+        <p className="container-x hidden py-2.5 sm:block"><PromoText text={promo} /></p>
+        <p className="container-x py-2.5 sm:hidden"><PromoText text={promo.replace(/^First purchase with a /i, '')} /></p>
       </div>
-      <header className={`sticky top-0 z-40 border-b transition-colors ${scrolled ? 'border-line bg-paper/90 backdrop-blur-md' : 'border-transparent bg-paper'}`}>
-        <div className="container-x flex h-16 items-center gap-4 lg:h-20">
-          <button className="-ml-2 rounded-full p-2 lg:hidden" onClick={() => setMenuOpen(true)} aria-label="Open menu" aria-expanded={menuOpen}><IconMenu /></button>
-          <Link href="/" className="flex shrink-0 items-center gap-2" aria-label={`${name} home`}>
-            <Image src={logo} alt="" width={44} height={44} className="h-10 w-10 object-contain lg:h-11 lg:w-11" priority />
-            <span className="hidden font-display text-lg font-semibold tracking-tight sm:inline">{name}</span>
+
+      <header className={`sticky top-0 z-40 border-b transition-[background-color,border-color,box-shadow] duration-300 ${scrolled ? 'border-line bg-paper/95 shadow-soft lg:bg-paper/85 lg:backdrop-blur-xl lg:backdrop-saturate-150' : 'border-transparent bg-paper'}`}>
+        <div className="container-x flex h-16 items-center gap-3 lg:h-[76px] lg:gap-8">
+          <button ref={menuButtonRef} className="btn-icon -ml-2 lg:hidden" onClick={() => setMenuOpen(true)} aria-label="Open menu" aria-expanded={menuOpen} aria-controls="mobile-nav"><IconMenu /></button>
+
+          <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${name} home`}>
+            <Image src={logo} alt="" width={44} height={44} className="h-10 w-10 object-contain" priority />
+            <span className="hidden font-display text-[19px] font-bold tracking-tight sm:inline lg:hidden xl:inline">{name}</span>
           </Link>
 
-          <nav aria-label="Main" className="mx-auto hidden lg:block">
-            <ul className="flex items-center gap-1">
+          <nav aria-label="Main" className="hidden lg:block">
+            <ul className="flex items-center">
               {nav.map((item) => (
                 <li key={item.label} className="group relative">
-                  <Link href={item.href} className={`flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition hover:bg-white ${isActive(item.href) ? 'text-sage-700' : 'text-ink'}`}>
+                  <Link href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}
+                    className="relative flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium xl:px-3.5 text-ink-soft transition hover:text-ink aria-[current=page]:text-ink">
                     {item.label}
-                    {item.children.length > 0 && <IconChevronDown width={14} height={14} />}
+                    {item.children.length > 0 && <IconChevronDown width={14} height={14} className="transition group-hover:rotate-180" />}
+                    {isActive(item.href) && <span className="absolute inset-x-3 -bottom-px xl:inset-x-3.5 h-0.5 rounded-full bg-brand" aria-hidden />}
                   </Link>
                   {item.children.length > 0 && (
-                    <div className="invisible absolute left-0 top-full pt-2 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-                      <ul className="min-w-56 rounded-2xl border border-line bg-white p-2 shadow-xl shadow-ink/5">
+                    <div className="invisible absolute left-0 top-full translate-y-1 pt-3 opacity-0 transition duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                      <ul className="min-w-60 rounded-2xl border border-line bg-card p-1.5 shadow-lift">
                         {item.children.map((c) => (
-                          <li key={c.label}><Link href={c.href} className="block rounded-xl px-4 py-2.5 text-sm hover:bg-sage-50">{c.label}</Link></li>
+                          <li key={c.label}><Link href={c.href} className="block rounded-xl px-3.5 py-2.5 text-sm text-ink-soft transition hover:bg-paper hover:text-ink">{c.label}</Link></li>
                         ))}
                       </ul>
                     </div>
@@ -76,61 +87,47 @@ export default function Header({ nav, promo, logo, name }: { nav: NavItem[]; pro
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 lg:ml-0">
-            <button className="rounded-full p-2.5 hover:bg-white" onClick={() => setSearchOpen((v) => !v)} aria-label="Search products" aria-expanded={searchOpen}><IconSearch /></button>
-            <Link href="/wishlist" className="relative hidden rounded-full p-2.5 hover:bg-white sm:block" aria-label={`Wishlist, ${wish} items`}>
+          <div className="ml-auto flex shrink-0 items-center gap-1">
+            {/* desktop: inline search */}
+            <form role="search" onSubmit={submitSearch} className="relative mr-2 hidden xl:block">
+              <label htmlFor="header-search" className="sr-only">Search products</label>
+              <IconSearch width={18} height={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
+              <input id="header-search" name="q" type="search" placeholder="Search products…" autoComplete="off"
+                className="h-10 w-44 rounded-full border border-line bg-card pl-10 pr-4 text-sm outline-none transition-[width,border-color,box-shadow] placeholder:text-muted focus:border-brand-700 focus:ring-4 focus:ring-brand/15 2xl:w-60 2xl:focus:w-72" />
+            </form>
+            <button className="btn-icon xl:hidden" onClick={() => setSearchOpen((v) => !v)} aria-label="Search products" aria-expanded={searchOpen} aria-controls="search-panel"><IconSearch /></button>
+            <Link href="/wishlist" className="btn-icon relative hidden sm:grid" aria-label={`Wishlist, ${wish} items`}>
               <IconHeart />
               {wish > 0 && <Badge n={wish} />}
             </Link>
-            <Link href="/cart" className="relative rounded-full bg-ink p-2.5 text-white hover:bg-ink-soft" aria-label={`Cart, ${count} items`}>
-              <IconBag />
-              {count > 0 && <Badge n={count} light />}
+            <Link href="/cart" className="relative ml-1 inline-flex h-10 items-center gap-2 rounded-full bg-ink pl-3 pr-3 text-sm font-semibold text-white transition hover:bg-brand-900 sm:pr-4" aria-label={`Cart, ${count} items`}>
+              <IconBag width={20} height={20} />
+              <span className="hidden sm:inline" aria-hidden>Cart</span>
+              {count > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-lime px-1 text-[11px] font-bold tabular-nums text-ink" aria-hidden>{count > 99 ? '99+' : count}</span>}
             </Link>
           </div>
         </div>
 
         {searchOpen && (
-          <div className="border-t border-line bg-paper">
+          <div id="search-panel" className="animate-fade-up border-t border-line bg-paper xl:hidden">
             <form role="search" onSubmit={submitSearch} className="container-x flex gap-2 py-3">
               <label htmlFor="site-search" className="sr-only">Search products</label>
               <input ref={searchRef} id="site-search" name="q" type="search" placeholder="Search for products" className="field" autoComplete="off" />
-              <button className="btn btn-primary">Search</button>
+              <button className="btn btn-primary h-12">Search</button>
             </form>
           </div>
         )}
       </header>
 
-      {/* mobile drawer */}
-      <div className={`fixed inset-0 z-50 lg:hidden ${menuOpen ? '' : 'pointer-events-none'}`} aria-hidden={!menuOpen}>
-        <div className={`absolute inset-0 bg-ink/40 transition-opacity ${menuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setMenuOpen(false)} />
-        <nav aria-label="Mobile" className={`absolute inset-y-0 left-0 flex w-[min(85vw,360px)] flex-col bg-paper shadow-2xl transition-transform ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="flex items-center justify-between border-b border-line p-4">
-            <span className="font-display text-lg font-semibold">{name}</span>
-            <button className="rounded-full p-2" onClick={() => setMenuOpen(false)} aria-label="Close menu" tabIndex={menuOpen ? 0 : -1}><IconClose /></button>
-          </div>
-          <ul className="flex-1 overflow-y-auto p-2">
-            {nav.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} tabIndex={menuOpen ? 0 : -1} className="block rounded-xl px-4 py-3 font-medium hover:bg-white">{item.label}</Link>
-                {item.children.length > 0 && (
-                  <ul className="mb-2 ml-4 border-l border-line pl-2">
-                    {item.children.map((c) => <li key={c.label}><Link href={c.href} tabIndex={menuOpen ? 0 : -1} className="block rounded-xl px-4 py-2.5 text-sm text-ink-soft hover:bg-white">{c.label}</Link></li>)}
-                  </ul>
-                )}
-              </li>
-            ))}
-            <li><Link href="/wishlist" tabIndex={menuOpen ? 0 : -1} className="block rounded-xl px-4 py-3 font-medium hover:bg-white">Wishlist</Link></li>
-            <li><Link href="/contact-us" tabIndex={menuOpen ? 0 : -1} className="block rounded-xl px-4 py-3 font-medium hover:bg-white">Contact Us</Link></li>
-          </ul>
-        </nav>
-      </div>
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} nav={nav} logo={logo} name={name} pathname={pathname}
+        cartCount={count} wishCount={wish} onSearch={submitSearch} returnFocusTo={menuButtonRef} />
     </>
   );
 }
 
-function Badge({ n, light }: { n: number; light?: boolean }) {
+function Badge({ n }: { n: number }) {
   return (
-    <span className={`absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] font-bold ${light ? 'bg-gold text-ink' : 'bg-sage-700 text-white'}`}>
+    <span className="absolute right-0.5 top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-brand-700 px-1 text-[10px] font-bold tabular-nums text-white" aria-hidden>
       {n > 99 ? '99+' : n}
     </span>
   );

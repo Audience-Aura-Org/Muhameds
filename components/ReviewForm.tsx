@@ -20,12 +20,12 @@ export default function ReviewForm({ slug, productName }: { slug: string; produc
   }
 
   if (state.status === 'done') {
-    return <p role="status" className="rounded-2xl bg-sage-50 p-5 text-sage-700">Thank you! Your review is awaiting approval.</p>;
+    return <p role="status" className="rounded-2xl bg-brand-50 p-5 text-brand-700">Thank you! Your review is awaiting approval.</p>;
   }
   const err = (k: string) => state.fields?.[k];
   return (
-    <form onSubmit={submit} noValidate className="space-y-4 rounded-3xl border border-line bg-white p-6">
-      <h3 className="font-display text-xl font-semibold">Add a review</h3>
+    <form onSubmit={submit} noValidate className="space-y-4 surface p-6">
+      <h3 className="font-display text-xl font-bold">Add a review</h3>
       <p className="text-sm text-muted">Reviewing {productName}. Your email address will not be published.</p>
       <fieldset>
         <legend className="label">Your rating *</legend>

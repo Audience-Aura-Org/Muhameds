@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mail:test": "node scripts/mail-test.mjs"
   },
   "dependencies": {
     "next": "15.3.3",

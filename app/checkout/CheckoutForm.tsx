@@ -29,8 +29,8 @@ export default function CheckoutForm({ paymentMethods }: { paymentMethods: Payme
 
   if (!cart.lines.length && !placed) {
     return (
-      <div className="rounded-[2rem] border border-dashed border-line bg-white p-12 text-center">
-        <p className="h-display text-2xl">Your cart is currently empty.</p>
+      <div className="rounded-3xl border border-dashed border-line-strong bg-card p-12 text-center">
+        <p className="h-display text-[26px]">Your cart is currently empty.</p>
         <Link href="/shop" className="btn btn-primary mt-6">Return to shop</Link>
       </div>
     );
@@ -98,8 +98,8 @@ export default function CheckoutForm({ paymentMethods }: { paymentMethods: Payme
   return (
     <form ref={formRef} onSubmit={submit} noValidate className="grid gap-10 lg:grid-cols-[1fr_420px]">
       <div className="space-y-10">
-        <section className="space-y-4 rounded-[2rem] border border-line bg-white p-6 sm:p-8">
-          <h2 className="h-display text-2xl">Billing details</h2>
+        <section className="space-y-4 surface p-6 sm:p-8">
+          <h2 className="h-display text-[26px]">Billing details</h2>
           <div>
             <label htmlFor="email" className="label">Email address *</label>
             <input id="email" name="email" type="email" autoComplete="email" required className="field" value={email}
@@ -110,9 +110,9 @@ export default function CheckoutForm({ paymentMethods }: { paymentMethods: Payme
           {addressFields('billing', 'billing')}
         </section>
 
-        <section className="space-y-4 rounded-[2rem] border border-line bg-white p-6 sm:p-8">
-          <label className="flex cursor-pointer items-center gap-3 font-display text-lg font-semibold">
-            <input type="checkbox" checked={shipDifferent} onChange={(e) => setShipDifferent(e.target.checked)} className="h-5 w-5 accent-sage-700" />
+        <section className="space-y-4 surface p-6 sm:p-8">
+          <label className="flex cursor-pointer items-center gap-3 font-display text-lg font-bold">
+            <input type="checkbox" checked={shipDifferent} onChange={(e) => setShipDifferent(e.target.checked)} className="h-5 w-5 accent-brand-700" />
             Ship to a different address?
           </label>
           {shipDifferent && addressFields('shipping', 'shipping')}
@@ -124,13 +124,13 @@ export default function CheckoutForm({ paymentMethods }: { paymentMethods: Payme
         <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
       </div>
 
-      <aside className="h-fit space-y-6 rounded-[2rem] border border-line bg-white p-6 lg:sticky lg:top-28" aria-label="Your order">
-        <h2 className="h-display text-2xl">Your order</h2>
+      <aside className="h-fit space-y-6 surface p-6 lg:sticky lg:top-28" aria-label="Your order">
+        <h2 className="h-display text-[26px]">Your order</h2>
         <ul className="space-y-3">
           {cart.lines.map((l) => (
             <li key={`${l.slug}-${l.variationId}`} className="flex items-center gap-3">
-              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-sage-50">
-                {l.image && <Image src={l.image} alt="" fill sizes="56px" className="object-contain p-1" />}
+              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl img-well">
+                {l.image && <Image src={l.image} alt="" fill sizes="56px" className="object-contain p-1 img-blend" />}
                 <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1 text-[11px] font-bold text-white">{l.qty}</span>
               </span>
               <span className="min-w-0 flex-1 text-sm"><span className="line-clamp-2 font-medium">{l.name}</span>{l.option && <span className="text-muted">{l.option}</span>}</span>
@@ -145,8 +145,8 @@ export default function CheckoutForm({ paymentMethods }: { paymentMethods: Payme
         <fieldset className="space-y-2">
           <legend className="label">Payment method *</legend>
           {paymentMethods.map((m) => (
-            <label key={m.id} className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-4 transition ${payment === m.id ? 'border-ink bg-sage-50' : 'border-line hover:border-ink-soft'}`}>
-              <input type="radio" name="payment" value={m.id} checked={payment === m.id} onChange={() => setPayment(m.id)} className="h-4 w-4 accent-sage-700" />
+            <label key={m.id} className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-4 transition ${payment === m.id ? 'border-ink bg-brand-50' : 'border-line hover:border-ink-soft'}`}>
+              <input type="radio" name="payment" value={m.id} checked={payment === m.id} onChange={() => setPayment(m.id)} className="h-4 w-4 accent-brand-700" />
               <span className="font-medium">{m.label}</span>
             </label>
           ))}

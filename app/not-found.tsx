@@ -14,7 +14,7 @@ export default function NotFound() {
         <input id="nf-q" name="q" type="search" placeholder="Search for products" className="field" />
         <button className="btn btn-primary">Search</button>
       </form>
-      <Link href="/" className="mt-6 inline-block font-semibold text-sage-700 hover:underline">Back to home</Link>
+      <Link href="/" className="mt-6 inline-block font-semibold text-brand-700 hover:underline">Back to home</Link>
     </div>
   );
 }

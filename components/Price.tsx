@@ -8,17 +8,26 @@ export function priceRange(p: Product): [number, number] | null {
   return lo === hi ? null : [lo, hi];
 }
 
-export default function Price({ product, size = 'sm' }: { product: Product; size?: 'sm' | 'lg' }) {
+/** Compact listing price. Variable products show a "From" price; sale items show the struck-through original. */
+export default function Price({ product, className = '' }: { product: Product; className?: string }) {
   const range = priceRange(product);
-  const cls = size === 'lg' ? 'text-2xl' : 'text-base';
   if (range) {
-    return <p className={`${cls} font-semibold text-ink`}><span className="sr-only">Price range: </span>{formatMoney(range[0])} – {formatMoney(range[1])}</p>;
+    return (
+      <p className={`flex items-baseline gap-1.5 ${className}`}>
+        <span className="text-xs text-muted">From</span>
+        <span className="text-[15px] font-semibold tabular-nums text-ink"><span className="sr-only">lowest price </span>{formatMoney(range[0])}</span>
+      </p>
+    );
   }
-  const onSale = product.regularPrice && product.regularPrice > product.price;
+  const onSale = product.regularPrice != null && product.regularPrice > product.price;
   return (
-    <p className={`${cls} flex flex-wrap items-baseline gap-2 font-semibold`}>
-      {onSale && <del className="text-[0.85em] font-normal text-muted"><span className="sr-only">Original price was: </span>{formatMoney(product.regularPrice!)}</del>}
-      <span className={onSale ? 'text-sale' : 'text-ink'}>{onSale && <span className="sr-only">Current price is: </span>}{formatMoney(product.price)}</span>
+    <p className={`flex flex-wrap items-baseline gap-x-2 ${className}`}>
+      <span className={`text-[15px] font-semibold tabular-nums ${onSale ? 'text-sale' : 'text-ink'}`}>
+        {onSale && <span className="sr-only">Sale price: </span>}{formatMoney(product.price)}
+      </span>
+      {onSale && (
+        <del className="text-[13px] tabular-nums text-muted"><span className="sr-only">Original price: </span>{formatMoney(product.regularPrice!)}</del>
+      )}
     </p>
   );
 }

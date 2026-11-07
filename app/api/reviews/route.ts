@@ -13,6 +13,20 @@ const input = z.object({
   website: z.string().max(0).optional().default(''), // honeypot
 });
 
+/** Published reviews past the first page. The product page server-renders the first few and
+ *  fetches the rest on demand, so long review lists don't bloat every product page's HTML. */
+export async function GET(req: Request) {
+  const sp = new URL(req.url).searchParams;
+  const product = getProduct(sp.get('slug') ?? '');
+  if (!product) return NextResponse.json({ error: 'Unknown product' }, { status: 404 });
+  const offset = Math.max(0, Math.min(Number(sp.get('offset')) || 0, product.reviews.length));
+  return NextResponse.json(
+    { reviews: product.reviews.slice(offset) },
+    // catalog reviews only change on deploy
+    { headers: { 'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800' } },
+  );
+}
+
 /** Reviews are stored for moderation and never published automatically.
  *  Links are rejected outright: the old site's spam reviews were all link drops. */
 export async function POST(req: Request) {
