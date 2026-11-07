@@ -1,4 +1,4 @@
-// Extracts catalog + page content from the HTTrack mirror into src/data/*.json
+// Extracts catalog + page content from the HTTrack mirror into data/*.json
 // and copies referenced images into public/media. Re-runnable.
 // Usage: node scripts/extract.mjs [mirrorDir]
 import * as cheerio from 'cheerio';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const MIRROR = process.argv[2] || 'C:/My Web Sites/https___muhamedstore.com_/muhamedstore.com';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const DATA = path.join(ROOT, 'src/data');
+const DATA = path.join(ROOT, 'data');
 const MEDIA = path.join(ROOT, 'public/media');
 fs.mkdirSync(DATA, { recursive: true });
 fs.mkdirSync(MEDIA, { recursive: true });
@@ -342,7 +342,7 @@ const home = {
   bestSellersTitle: 'BEST SELLERS',
   bestSellers: ['master-box-muha', '2g-disposable-mix-pack-10-pcs', 'agent-orange-indica', 'agent-orange-mini', 'banana-cream-vape', 'blue-dream'],
 };
-log.notes.push('Not migrated: 15 home-page "Verified Customer" testimonials (stock/social-media photos with invented names) and the "Trustpilot 4.9 / 3574 reviews" badge (WoodMart demo text). Add real ones in src/data/site.json -> testimonials.');
+log.notes.push('Not migrated: 15 home-page "Verified Customer" testimonials (stock/social-media photos with invented names) and the "Trustpilot 4.9 / 3574 reviews" badge (WoodMart demo text). Add real ones in data/site.json -> testimonials.');
 
 // home product sections: keep the first rendered set of each titled block
 const homeSections = [];
@@ -380,5 +380,5 @@ write('products.json', products);
 write('categories.json', categories);
 write('pages.json', pages);
 write('site.json', { ...site, productTemplate });
-write('extract-log.json', log);
+fs.writeFileSync(path.join(ROOT, 'scripts/extract-log.json'), JSON.stringify(log, null, 1));
 console.log({ products: products.length, categories: categories.map((c) => `${c.slug}:${c.products.length}`), pages: pages.length, images: [...copied.values()].filter(Boolean).length, missingImages: log.missingImages.length, contentFixes: log.contentFixes.length, nav: nav.length, heroSlides: heroSlides.length, homeSections: homeSections.length, shopOrder: shopOrder.length });

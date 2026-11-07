@@ -33,6 +33,6 @@
  ],
  "missingImages": [],
  "notes": [
-  "Not migrated: 15 home-page \"Verified Customer\" testimonials (stock/social-media photos with invented names) and the \"Trustpilot 4.9 / 3574 reviews\" badge (WoodMart demo text). Add real ones in src/data/site.json -> testimonials."
+  "Not migrated: 15 home-page \"Verified Customer\" testimonials (stock/social-media photos with invented names) and the \"Trustpilot 4.9 / 3574 reviews\" badge (WoodMart demo text). Add real ones in data/site.json -> testimonials."
  ]
 }

@@ -1,7 +1,7 @@
 # Muha Meds Store — Next.js storefront
 
 A standalone Next.js 15 (App Router, TypeScript, Tailwind v4) rebuild of muhamedstore.com.
-No WordPress: catalog and page content live in `src/data/*.json`, orders are handled by
+No WordPress: catalog and page content live in `data/*.json`, orders are handled by
 the app's own API, and customers pay manually (Zelle | Venmo, Cashapp or crypto, Chime).
 
 ## Run it
@@ -16,7 +16,7 @@ npm run build && npm start   # production
 Requires Node 20+. The production server must have a **persistent, writable** `DATA_DIR`
 (default `./var`) — that is where orders, contact messages and pending reviews are saved.
 Works on a VPS, Docker, or a Hostinger Node.js app. On serverless hosts (Vercel/Netlify)
-the disk is wiped between requests: replace `src/lib/store.ts` with a database first.
+the disk is wiped between requests: replace `lib/store.ts` with a database first.
 
 ## How orders work
 
@@ -31,7 +31,7 @@ the disk is wiped between requests: replace `src/lib/store.ts` with a database f
 To change an order's status, edit `status` in `var/orders.json`
 (`pending-payment` → `processing` → `shipped` → `completed`, or `cancelled`).
 
-Pricing rules (`src/data/site.json`):
+Pricing rules (`data/site.json`):
 - `shipping.flatRate` = $10.00, free when the order (after discount) reaches `shipping.freeOver` = $500.
 - `coupons`: `WDPILLS23` = 10% off, first order per email only.
 - `paymentMethods[].instructions` (optional) — e.g. your Zelle/CashApp handle. `{order}` is replaced
@@ -39,8 +39,8 @@ Pricing rules (`src/data/site.json`):
 
 ## Editing content
 
-- Products, categories, pages: `src/data/products.json`, `categories.json`, `pages.json`.
-- Menus, footer, home page copy, coupons, shipping, payment methods: `src/data/site.json`.
+- Products, categories, pages: `data/products.json`, `categories.json`, `pages.json`.
+- Menus, footer, home page copy, coupons, shipping, payment methods: `data/site.json`.
 - Images: `public/media/…`.
 - Real customer testimonials: add to `site.json → testimonials` (`{ name, location, text }`); the
   home-page section appears automatically.
@@ -49,7 +49,7 @@ Pricing rules (`src/data/site.json`):
 
 `scripts/extract.mjs` regenerates the data from the HTTrack copy of the old site
 (`node scripts/extract.mjs "<path to mirror>/muhamedstore.com"`). Running it overwrites
-manual edits in `src/data`, so only use it for the initial import.
+manual edits in `data/`, so only use it for the initial import.
 
 ## SEO / migration
 

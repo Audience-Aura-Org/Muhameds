@@ -10,7 +10,6 @@ export const IconMenu = (p: P) => <svg {...base(p)}><path d="M4 7h16M4 12h16M4 1
 export const IconClose = (p: P) => <svg {...base(p)}><path d="M6 6l12 12M18 6 6 18" /></svg>;
 export const IconChevron = (p: P) => <svg {...base(p)}><path d="m9 6 6 6-6 6" /></svg>;
 export const IconChevronDown = (p: P) => <svg {...base(p)}><path d="m6 9 6 6 6-6" /></svg>;
-export const IconUser = (p: P) => <svg {...base(p)}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>;
 export const IconStore = (p: P) => <svg {...base(p)}><path d="M4 9 5.5 4h13L20 9" /><path d="M4 9h16v2a3 3 0 0 1-5 2 3 3 0 0 1-6 0 3 3 0 0 1-5-2V9Z" /><path d="M5 13v7h14v-7" /></svg>;
 export const IconTruck = (p: P) => <svg {...base(p)}><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="2" /><circle cx="17" cy="18" r="2" /></svg>;
 export const IconCheck = (p: P) => <svg {...base(p)}><path d="m5 12 5 5 9-10" /></svg>;
