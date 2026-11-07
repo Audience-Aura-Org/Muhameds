@@ -1,103 +1,122 @@
-import Image from "next/image";
+import Image from 'next/image';
+import Link from 'next/link';
+import { getProducts, products, site, visibleCategories } from '@/lib/catalog';
+import HeroSlider from '@/components/HeroSlider';
+import ProductGrid from '@/components/ProductGrid';
+import SectionHeading from '@/components/SectionHeading';
+import { IconCheck } from '@/components/Icons';
+import Services from '@/components/Services';
 
-export default function Home() {
+export default function HomePage() {
+  const h = site.home;
+  const sections = site.homeSections.map((s) => ({ ...s, items: getProducts(s.products) }));
+  const onSale = products.filter((p) => p.regularPrice && p.regularPrice > p.price);
+  const cats = visibleCategories();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <div className="container-x pt-4 sm:pt-6">
+        <HeroSlider slides={site.heroSlides} />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* marquee */}
+      <div className="mt-6 overflow-hidden border-y border-line bg-white py-4" aria-label="Store highlights">
+        <ul className="animate-marquee flex w-max gap-12 whitespace-nowrap">
+          {[...h.marquee, ...h.marquee, ...h.marquee, ...h.marquee].map((m, i) => (
+            <li key={i} className="flex items-center gap-3 font-display text-lg font-medium" aria-hidden={i >= h.marquee.length}>
+              <Image src={m.icon} alt="" width={28} height={28} />{m.text}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* categories */}
+      <section className="container-x mt-16" aria-labelledby="cats">
+        <h2 id="cats" className="sr-only">Shop by category</h2>
+        <ul className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none]">
+          <li><Link href="/shop" className="btn btn-primary whitespace-nowrap">All products ({products.length})</Link></li>
+          {cats.map((c) => <li key={c.slug}><Link href={`/product-category/${c.slug}`} className="btn btn-ghost whitespace-nowrap">{c.name} ({c.products.length})</Link></li>)}
+        </ul>
+      </section>
+
+      {/* intro */}
+      <section className="container-x mt-16 grid items-center gap-10 lg:grid-cols-2">
+        <h2 className="h-display text-4xl leading-tight sm:text-5xl lg:text-6xl">
+          {h.intro.heading[0]} {h.intro.heading[1]} <span className="text-sage-700">{h.intro.heading[2]}</span>
+        </h2>
+        <div className="space-y-4 text-lg leading-relaxed text-ink-soft">
+          <h3 className="font-display text-xl font-semibold text-ink">{h.intro.title}</h3>
+          {h.intro.body.map((p, i) => <p key={i}>{p}</p>)}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* sale products */}
+      {sections[0] && (
+        <section className="container-x mt-24">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
+            <Link href="/shop?sort=price-asc" className="group relative hidden overflow-hidden rounded-3xl lg:block">
+              <Image src={h.banners[0].image} alt="" fill sizes="340px" className="object-cover transition duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/80 to-transparent" />
+              <p className="absolute bottom-6 left-6 font-display text-3xl font-semibold text-white">{h.banners[0].title}</p>
+            </Link>
+            <div>
+              <SectionHeading title={sections[0].title} eyebrow={`${onSale.length} products on sale`} href="/shop" />
+              <ProductGrid products={sections[0].items.slice(0, 4)} />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* remaining curated sections */}
+      {sections.slice(1).map((s) => (
+        <section key={s.title} className="container-x mt-24">
+          <SectionHeading title={s.title} href="/shop" />
+          <ProductGrid products={s.items.slice(0, 8)} />
+        </section>
+      ))}
+
+      {/* passion */}
+      <section className="container-x mt-24">
+        <div className="grid overflow-hidden rounded-[2rem] bg-ink text-white lg:grid-cols-2">
+          <div className="relative min-h-[320px]">
+            <Image src={h.passion.image} alt="" fill sizes="(min-width:1024px) 660px, 100vw" className="object-cover" />
+          </div>
+          <div className="space-y-5 p-8 sm:p-12 lg:p-16">
+            <h2 className="font-display text-4xl font-semibold tracking-tight">{h.passion.title}</h2>
+            {h.passion.body.map((p, i) => <p key={i} className="leading-relaxed text-white/75">{p}</p>)}
+            <ul className="space-y-3 pt-2">
+              {h.passion.points.map((p) => <li key={p} className="flex gap-3"><IconCheck className="mt-0.5 shrink-0 text-gold" />{p}</li>)}
+            </ul>
+            <Link href={h.help.href} className="btn mt-4 bg-white text-ink hover:bg-gold">{h.help.title} {h.help.cta}</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* featured + best sellers */}
+      <section className="container-x mt-24">
+        <SectionHeading title={h.featuredTitle} href="/shop" />
+        <ProductGrid products={getProducts(h.featured)} />
+      </section>
+      <section className="container-x mt-24">
+        <SectionHeading title={h.bestSellersTitle} href="/shop?sort=popularity" />
+        <ProductGrid products={getProducts(h.bestSellers)} />
+      </section>
+
+      {site.testimonials.length > 0 && (
+        <section className="container-x mt-24">
+          <SectionHeading title="Customer Testimonials" />
+          <ul className="grid gap-5 md:grid-cols-3">
+            {site.testimonials.map((t) => (
+              <li key={t.name} className="rounded-3xl border border-line bg-white p-6">
+                <blockquote className="text-ink-soft">“{t.text}”</blockquote>
+                <p className="mt-4 font-semibold">{t.name}{t.location ? `, ${t.location}` : ''}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <Services />
+    </>
   );
 }

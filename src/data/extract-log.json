@@ -1,0 +1,38 @@
+{
+ "contentFixes": [
+  {
+   "where": "agent-orange-indica description",
+   "removed": "give me long product description for AGENT ORANGE vape",
+   "reason": "AI prompt pasted into published copy"
+  },
+  {
+   "where": "menu Cartridges",
+   "removed": "link to homepage",
+   "reason": "menu item pointed to the homepage; now /shop?q=cartridge"
+  },
+  {
+   "where": "menu Disposables",
+   "removed": "link to homepage",
+   "reason": "menu item pointed to the homepage; now /product-category/disposables"
+  },
+  {
+   "where": "menu Flower",
+   "removed": "link to homepage",
+   "reason": "menu item pointed to the homepage; now /shop?q=flower"
+  },
+  {
+   "where": "menu Infused Pre-rolls",
+   "removed": "link to homepage",
+   "reason": "menu item pointed to the homepage; now /shop?q=pre-roll"
+  },
+  {
+   "where": "menu Wholesale Vape",
+   "removed": "link to homepage",
+   "reason": "menu item pointed to the homepage; now /contact-us"
+  }
+ ],
+ "missingImages": [],
+ "notes": [
+  "Not migrated: 15 home-page \"Verified Customer\" testimonials (stock/social-media photos with invented names) and the \"Trustpilot 4.9 / 3574 reviews\" badge (WoodMart demo text). Add real ones in src/data/site.json -> testimonials."
+ ]
+}

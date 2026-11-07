@@ -1,0 +1,346 @@
+{
+ "name": "Muha Meds Store",
+ "tagline": "Muha MEds, High-end Muha Med items, including concentrates, cartridges, and disposable vapes, are designed for consistent quality.",
+ "logo": "/media/2025/11/cropped-272735780a810ba63bdc2e5b4bd13882-removebg-preview.png",
+ "favicon": "/media/2025/11/cropped-272735780a810ba63bdc2e5b4bd13882-removebg-preview.png",
+ "promoBar": "First purchase with a 10% discount, use promo code: WDPILLS23",
+ "nav": [
+  {
+   "label": "Home",
+   "href": "/",
+   "children": []
+  },
+  {
+   "label": "Shop",
+   "href": "/shop",
+   "children": []
+  },
+  {
+   "label": "Products",
+   "href": "/product-category/muha-meds",
+   "children": [
+    {
+     "label": "Cartridges",
+     "href": "/shop?q=cartridge"
+    },
+    {
+     "label": "Disposables",
+     "href": "/product-category/disposables"
+    },
+    {
+     "label": "Flower",
+     "href": "/shop?q=flower"
+    },
+    {
+     "label": "Infused Pre-rolls",
+     "href": "/shop?q=pre-roll"
+    },
+    {
+     "label": "Wholesale Vape",
+     "href": "/contact-us"
+    },
+    {
+     "label": "Boutiq SWITCH V5",
+     "href": "/product-category/boutiq-switch-v5"
+    }
+   ]
+  },
+  {
+   "label": "Order Tracking",
+   "href": "/order-tracking",
+   "children": []
+  },
+  {
+   "label": "Refund and Returns Policy",
+   "href": "/refund-returns",
+   "children": []
+  }
+ ],
+ "footer": {
+  "about": [
+   "At Muha Meds Store is to deliver premium, safe, and reliable cannabis-related products that customers can trust. We are dedicated to providing an exceptional experience built on quality, transparency, and responsibility. Through rigorous testing, ethical practices, and a customer-first approach, we aim to elevate industry standards and ensure every customer feels confident, valued, and supported.",
+   "We strive to lead with integrity, innovate with purpose, and create products that reflect our commitment to safety, consistency, and excellence. Our mission is not only to serve but to set the standard for what a trusted cannabis brand should be."
+  ],
+  "logo": "/media/2025/11/272735780a810ba63bdc2e5b4bd13882-removebg-preview.png",
+  "badge": "/media/2025/11/505c6619-47ec-4d71-90fa-8cca4151050b-removebg-preview-1.png",
+  "columns": [
+   {
+    "title": "Products",
+    "links": [
+     {
+      "label": "Cartridges",
+      "href": "/shop?q=cartridge"
+     },
+     {
+      "label": "Disposables",
+      "href": "/product-category/disposables"
+     },
+     {
+      "label": "Flower",
+      "href": "/shop?q=flower"
+     },
+     {
+      "label": "Infused Pre-rolls",
+      "href": "/shop?q=pre-roll"
+     },
+     {
+      "label": "Wholesale Vape",
+      "href": "/contact-us"
+     }
+    ]
+   },
+   {
+    "title": "Company Policy",
+    "links": [
+     {
+      "label": "Privacy Policy",
+      "href": "/privacy-policy"
+     },
+     {
+      "label": "Refund & Return Policy",
+      "href": "/refund-returns"
+     },
+     {
+      "label": "Terms & Conditions",
+      "href": "/terms-conditions"
+     },
+     {
+      "label": "Shipping Policy",
+      "href": "/shipping-policy"
+     }
+    ]
+   },
+   {
+    "title": "Costumer Service",
+    "links": [
+     {
+      "label": "Order Tracking",
+      "href": "/order-tracking"
+     },
+     {
+      "label": "Customer Support",
+      "href": "/customer-support"
+     },
+     {
+      "label": "About Us",
+      "href": "/about-us"
+     },
+     {
+      "label": "Contact Us",
+      "href": "/contact-us"
+     }
+    ]
+   }
+  ],
+  "copyright": "© Muha Meds Store. 2025. All Rights Reserved"
+ },
+ "heroSlides": [
+  {
+   "title": "Shop Muha Meds",
+   "subtitle": "Buy Shop Muha Meds Online",
+   "cta": {
+    "label": "SHOP NOW",
+    "href": "/shop"
+   },
+   "image": "/media/2026/03/muhameds-20251128-0009-2-1024x1024-2.webp",
+   "imageAlt": "Muha MEds"
+  },
+  {
+   "title": "Buy Muha Meds Online",
+   "subtitle": "Safe Place to Buy Muha Meds Online",
+   "cta": {
+    "label": "Shop Now",
+    "href": "/shop"
+   },
+   "image": "/media/2026/03/unnamed-23-1.jpg",
+   "imageAlt": "Muha MEds"
+  },
+  {
+   "title": "Muha meds store",
+   "subtitle": "We are the most tested and trusted shop where can buy high quality vapes",
+   "cta": {
+    "label": "Shop Now",
+    "href": "/shop"
+   },
+   "image": "/media/2025/11/unnamed-14.jpg",
+   "imageAlt": "Muha MEds"
+  }
+ ],
+ "homeSections": [
+  {
+   "title": "SALE PRODUCTS",
+   "products": [
+    "2g-disposable-mix-pack-10-pcs",
+    "agent-orange-indica",
+    "agent-orange-mini",
+    "banana-cream-vape",
+    "blue-dream"
+   ]
+  },
+  {
+   "title": "SPECIAL OFFER",
+   "products": [
+    "blue-slushie-muha-2g-disposable",
+    "watermelon-moonshine-distillate-disposable-2g",
+    "muha-pineapple-paradise-disposable-distillate",
+    "silver-super-haze-sativa",
+    "boutiq-switch-v5",
+    "boutiq-switch-v5-disposable"
+   ]
+  },
+  {
+   "title": "NEW ARRIVALS",
+   "products": [
+    "master-box-muha",
+    "2g-disposable-mix-pack-10-pcs",
+    "agent-orange-indica",
+    "agent-orange-mini",
+    "banana-cream-vape",
+    "blue-dream"
+   ]
+  }
+ ],
+ "home": {
+  "intro": {
+   "heading": [
+    "Premium Quality",
+    "Standard",
+    "And Customer First Approach"
+   ],
+   "title": "Premium Quality Standards",
+   "body": [
+    "We are committed to delivering products of exceptional quality. From sourcing raw materials to final testing, every stage of our process is designed to maintain purity, potency, and consistency. We never compromise on quality because our customers deserve the best.",
+    "We strive to provide a seamless experience, reliable support, and fast, secure delivery. Your satisfaction is our mission. Muha MEds"
+   ]
+  },
+  "marquee": [
+   {
+    "icon": "/media/2024/03/w-pas-m-icon-1.svg",
+    "text": "Free Shipping from $500!"
+   },
+   {
+    "icon": "/media/2024/03/w-pas-m-icon-2.svg",
+    "text": "We have top quality Muha Products"
+   },
+   {
+    "icon": "/media/2024/03/w-pas-m-icon-3.svg",
+    "text": "Fast and timely delivery"
+   }
+  ],
+  "banners": [
+   {
+    "image": "/media/2025/11/unnamed-26.jpg",
+    "title": "SALE PRODUCTS"
+   },
+   {
+    "image": "/media/2025/11/unnamed-22.jpg",
+    "title": "NEW ARRIVALS"
+   },
+   {
+    "image": "/media/2025/11/7cf5516c-f023-4186-a976-50c52a939a60-425x600.jpg",
+    "title": "Now Available in stock"
+   },
+   {
+    "image": "/media/2025/11/bb131311-7541-437e-8cac-e843113eac72-425x600.jpg",
+    "title": "Available now  in Stock"
+   },
+   {
+    "image": "/media/2025/11/58c5bc4a-ee8f-4348-a66e-89a0396250e0.jpg",
+    "title": "Now Available in stock"
+   }
+  ],
+  "passion": {
+   "title": "Passion for What We Do",
+   "body": [
+    "Muha Meds Store is built by people who are passionate about quality, customer satisfaction, and innovation. Our passion fuels our commitment to excellence in every product we create and every service we provide",
+    "We believe trust is earned through honesty. From clear product labels to transparent business practices, we operate with integrity at every level. Our commitment to ethical conduct ensures long-term relationships with our customers, partners, and community."
+   ],
+   "points": [
+    "We believe in contributing positively to the communities we serve.",
+    "Every day, we evaluate our processes, customer feedback, and product performance",
+    "Growth and improvement drive our success."
+   ],
+   "image": "/media/2025/11/unnamed-15.jpg"
+  },
+  "help": {
+   "title": "Need help choosing?",
+   "cta": "Contact With Expert",
+   "href": "/contact-us"
+  },
+  "services": [
+   {
+    "icon": "/media/2025/11/retail-2-shipping.svg",
+    "title": "FREE SHIPPING",
+    "text": "Free shipping over $500"
+   },
+   {
+    "icon": "/media/2025/11/retail-2-online-payment.svg",
+    "title": "ONLINE PAYMENT",
+    "text": "Secure and Fast payment"
+   },
+   {
+    "icon": "/media/2025/11/retail-2-support.svg",
+    "title": "24/7 SUPPORT",
+    "text": "Unlimited help desk"
+   },
+   {
+    "icon": "/media/2025/11/retail-2-safe.svg",
+    "title": "100% SAFE",
+    "text": "Secure and Reliable"
+   },
+   {
+    "icon": "/media/2025/11/retail-2-return.svg",
+    "title": "FREE RETURNS",
+    "text": "Available"
+   }
+  ],
+  "featuredTitle": "FEATURED PRODUCTS",
+  "featured": [
+   "blue-slushie-muha-2g-disposable",
+   "watermelon-moonshine-distillate-disposable-2g",
+   "muha-pineapple-paradise-disposable-distillate",
+   "silver-super-haze-sativa"
+  ],
+  "bestSellersTitle": "BEST SELLERS",
+  "bestSellers": [
+   "master-box-muha",
+   "2g-disposable-mix-pack-10-pcs",
+   "agent-orange-indica",
+   "agent-orange-mini",
+   "banana-cream-vape",
+   "blue-dream"
+  ]
+ },
+ "testimonials": [],
+ "paymentMethods": [
+  {
+   "id": "zelle-venmo",
+   "label": "Zelle | Venmo"
+  },
+  {
+   "id": "cashapp-crypto",
+   "label": "Cashapp or crypto"
+  },
+  {
+   "id": "chime",
+   "label": "Chime"
+  }
+ ],
+ "shipping": {
+  "flatRate": 1000,
+  "freeOver": 50000
+ },
+ "coupons": [
+  {
+   "code": "WDPILLS23",
+   "percent": 10,
+   "firstOrderOnly": true
+  }
+ ],
+ "email": "info@Muhamedstore.com",
+ "address": "634 Kohler St, Los Angeles, CA 90021, USA",
+ "productTemplate": {
+  "wd_infobox_carousel": "<img src=\"/media/2025/11/58c5bc4a-ee8f-4348-a66e-89a0396250e0-removebg-preview-100x118.png\" alt=\"\" loading=\"lazy\">\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tSAVE 15%\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t<h4>\n\t\t\t\t\t\t\t\t10 x pck\t\t\t\t\t\t</h4>\n\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t<a href=\"#\"></a>\n\t\t\t\t\t\t\t\n\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img src=\"/media/2025/11/IMG_1091-scaled.jpg\" alt=\"\" loading=\"lazy\">\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tSAVE 10%\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t<h4>\n\t\t\t\t\t\t\t\t1 per pck\t\t\t\t\t\t</h4>\n\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t<a href=\"#\"></a>",
+  "wd_text_block": "<h3><strong>🔹 First-Time Customer Discount</strong></h3><p>Enjoy <strong>10% off your first order</strong> when you shop with us for the first time.<br>Use code: <strong>WDPILLS23</strong></p><h3><strong>🔹 Bulk Order Savings</strong></h3><p>Save <strong>up to 15%</strong> on bulk purchases.<br>The more you buy, the more you save.<br>Contact us directly for customized bulk pricing.</p>"
+ }
+}
