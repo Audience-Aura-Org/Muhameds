@@ -69,7 +69,7 @@ export default function ProductBuyBox({ product: p, children, footer }: { produc
       <div className="min-w-0">
         {children}
 
-        <div className="mt-6 flex flex-wrap items-center gap-3" aria-live="polite">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:mt-6 sm:justify-start" aria-live="polite">
           {v || !range ? (
             <>
               <span className={`font-display text-[34px] font-semibold tabular-nums tracking-tight ${regular && regular > unit ? 'text-sale' : ''}`}>{formatMoney(unit)}</span>
@@ -80,11 +80,11 @@ export default function ProductBuyBox({ product: p, children, footer }: { produc
             <span className="font-display text-[34px] font-bold tabular-nums tracking-tight">{formatMoney(range[0])} <span className="text-muted">–</span> {formatMoney(range[1])}</span>
           )}
         </div>
-        <p className={`mt-2 inline-flex items-center gap-2 text-sm font-medium ${inStock ? 'text-brand-700' : 'text-sale'}`}>
+        <p className={`mt-2 flex items-center justify-center gap-2 text-sm font-medium sm:inline-flex sm:justify-start ${inStock ? 'text-brand-700' : 'text-sale'}`}>
           <span className={`h-2 w-2 rounded-full ${inStock ? 'bg-brand animate-pulse' : 'bg-sale'}`} aria-hidden />{inStock ? 'In stock, ready to ship' : 'Currently out of stock'}
         </p>
 
-        <div className="my-7 h-px bg-line" />
+        <div className="my-6 h-px bg-line sm:my-7" />
 
         {needsOption && p.attribute && (
           <fieldset ref={optionsRef} className="mb-7 scroll-mt-32">

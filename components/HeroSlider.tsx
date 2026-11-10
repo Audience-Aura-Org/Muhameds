@@ -64,12 +64,12 @@ export default function HeroSlider({ slides }: { slides: Site['heroSlides'] }) {
                   className={`object-cover transition-transform duration-[8000ms] ease-out ${active ? 'scale-105' : 'scale-100'}`} />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/10 sm:bg-gradient-to-r sm:from-ink/90 sm:via-ink/50 sm:to-ink/0" />
-              <div className="absolute inset-0 flex items-end p-6 pb-24 sm:items-center sm:p-12 lg:p-20">
-                <div className={`max-w-xl text-white transition duration-700 ${active ? 'translate-y-0 opacity-100 delay-200' : 'translate-y-4 opacity-0'}`}>
+              <div className="absolute inset-0 flex items-end justify-center p-6 pb-24 text-center sm:items-center sm:justify-start sm:p-12 sm:text-left lg:p-20">
+                <div className={`flex max-w-xl flex-col items-center text-white sm:block transition duration-700 ${active ? 'translate-y-0 opacity-100 delay-200' : 'translate-y-4 opacity-0'}`}>
                   <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-ink/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-lime">
                     <span className="h-1.5 w-1.5 rounded-full bg-lime" aria-hidden />Muha Meds Store
                   </p>
-                  <Heading className="mt-5 font-display text-[44px] font-bold leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-7xl">{s.title}</Heading>
+                  <Heading className="mt-5 font-display text-[38px] font-bold leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-7xl">{s.title}</Heading>
                   <p className="mt-4 max-w-md text-base text-white/75 sm:text-lg">{s.subtitle}</p>
                   <Link href={s.cta.href} className="btn btn-lime btn-lg group/cta mt-8">
                     {s.cta.label.charAt(0) + s.cta.label.slice(1).toLowerCase()}
@@ -83,7 +83,7 @@ export default function HeroSlider({ slides }: { slides: Site['heroSlides'] }) {
       </div>
 
       {slides.length > 1 && (
-        <div className="absolute inset-x-6 bottom-6 flex items-center justify-between gap-4 sm:inset-x-12 lg:inset-x-20 lg:bottom-10">
+        <div className="absolute inset-x-6 bottom-6 flex items-center justify-center gap-4 sm:justify-between sm:inset-x-12 lg:inset-x-20 lg:bottom-10">
           <div className="flex gap-2">
             {slides.map((s, n) => (
               <button key={s.title} onClick={() => go(n)} aria-label={`Go to slide ${n + 1}`} aria-current={n === i}
@@ -94,7 +94,7 @@ export default function HeroSlider({ slides }: { slides: Site['heroSlides'] }) {
               </button>
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className="hidden gap-2 sm:flex">
             <button onClick={() => go(i - 1)} aria-label="Previous slide" className="grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-ink/30 text-white transition hover:bg-white hover:text-ink"><IconChevron className="rotate-180" width={20} /></button>
             <button onClick={() => go(i + 1)} aria-label="Next slide" className="grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-ink/30 text-white transition hover:bg-white hover:text-ink"><IconChevron width={20} /></button>
           </div>

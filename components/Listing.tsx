@@ -46,16 +46,16 @@ export default function Listing({ basePath, title, intro, category, params }: {
   return (
     <div className="container-x pt-6 sm:pt-10">
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
-        <ol className="flex flex-wrap items-center gap-1.5">
+        <ol className="flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
           <li><IntentLink href="/" className="transition hover:text-ink">Home</IntentLink></li><li aria-hidden className="text-line-strong">/</li>
           {category && <><li><IntentLink href="/shop" className="transition hover:text-ink">Shop</IntentLink></li><li aria-hidden className="text-line-strong">/</li></>}
           <li aria-current="page" className="text-ink">{title}</li>
         </ol>
       </nav>
 
-      <header className="mt-4 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-8">
+      <header className="mt-4 flex flex-col items-center gap-3 border-b border-line pb-6 text-center sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4 sm:pb-8 sm:text-left">
         <div className="max-w-3xl">
-          <h1 className="h-display text-4xl leading-[1.05] sm:text-[56px]">{q ? <>Results for “{q}”</> : title}</h1>
+          <h1 className="h-display text-[34px] leading-[1.05] sm:text-[56px]">{q ? <>Results for “{q}”</> : title}</h1>
           {intro && <div className="rich mt-4 text-ink-soft" dangerouslySetInnerHTML={{ __html: intro }} />}
         </div>
         <p className="text-sm text-muted" aria-live="polite">
@@ -63,7 +63,7 @@ export default function Listing({ basePath, title, intro, category, params }: {
         </p>
       </header>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-12">
+      <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-12">
         <aside className="min-w-0" aria-label="Filters">
           <div className="lg:sticky lg:top-28 lg:space-y-8">
             <div>

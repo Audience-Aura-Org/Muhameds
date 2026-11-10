@@ -1,13 +1,21 @@
 import type { MetadataRoute } from 'next';
-import { categories, pages, products } from '@/lib/catalog';
-import { SITE_URL } from '@/lib/site-url';
+import { categories, pages, products, visibleCategories } from '@/lib/catalog';
+import { abs } from '@/lib/seo';
 
+// Regenerated on every build, so lastModified = deploy date.
 export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
+  const indexable = new Set(visibleCategories().map((c) => c.slug));
   return [
-    { url: SITE_URL, priority: 1 },
-    { url: `${SITE_URL}/shop`, priority: 0.9 },
-    ...categories.filter((c) => c.slug !== 'uncategorized').map((c) => ({ url: `${SITE_URL}/product-category/${c.slug}`, priority: 0.8 })),
-    ...products.map((p) => ({ url: `${SITE_URL}/product/${p.slug}`, priority: 0.7 })),
-    ...pages.map((p) => ({ url: `${SITE_URL}/${p.slug}`, priority: 0.4 })),
+    { url: abs('/'), lastModified: now, changeFrequency: 'daily', priority: 1 },
+    { url: abs('/shop'), lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    ...categories
+      .filter((c) => indexable.has(c.slug))
+      .map((c) => ({ url: abs(`/product-category/${c.slug}`), lastModified: now, changeFrequency: 'weekly' as const, priority: 0.8 })),
+    ...products.map((p) => ({
+      url: abs(`/product/${p.slug}`), lastModified: now, changeFrequency: 'weekly' as const, priority: 0.7,
+      images: p.images.slice(0, 3).map(abs),
+    })),
+    ...pages.map((p) => ({ url: abs(`/${p.slug}`), lastModified: now, changeFrequency: 'monthly' as const, priority: 0.4 })),
   ];
 }

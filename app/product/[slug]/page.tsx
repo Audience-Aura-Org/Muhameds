@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { categoryName, getProduct, products, relatedProducts, site } from '@/lib/catalog';
 import { SITE_URL } from '@/lib/site-url';
+import { abs, breadcrumbLd, describe, ORG_ID, plainText, seoTitle } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import ProductBuyBox from '@/components/ProductBuyBox';
 import ProductCard from '@/components/ProductCard';
 import ProductRail from '@/components/ProductRail';
@@ -19,17 +21,21 @@ export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
 
-const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-const metaDescription = (html: string) => { const t = text(html); return t.length > 158 ? t.slice(0, 155).replace(/\s\S*$/, '') + '…' : t; };
+const productDescription = (p: NonNullable<ReturnType<typeof getProduct>>) => describe(p.seo?.description, p.shortDescription, p.description, `Buy ${p.name} online at ${site.name}.`);
+// Offers need an expiry for rich results; roll it forward each build
+const priceValidUntil = `${new Date().getFullYear() + 1}-12-31`;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = getProduct((await params).slug);
   if (!p) return {};
-  const description = metaDescription(p.shortDescription || p.description);
+  const description = productDescription(p);
+  const title = seoTitle(p.seo?.title, p.name);
+  const images = p.images.slice(0, 1).map((url) => ({ url, alt: p.imageAlt || p.name }));
   return {
-    title: p.name, description,
+    title, description,
     alternates: { canonical: `/product/${p.slug}` },
-    openGraph: { title: p.name, description, images: p.images.slice(0, 1), type: 'website' },
+    openGraph: { title, description, url: `/product/${p.slug}`, images, type: 'website' },
+    twitter: { card: 'summary_large_image', title, description, images },
   };
 }
 
@@ -38,16 +44,28 @@ export default async function ProductPage({ params }: Props) {
   if (!p) notFound();
   const related = relatedProducts(p);
   const cat = p.categories[0];
+  const url = `${SITE_URL}/product/${p.slug}`;
+  const availability = p.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+  const offerBase = { priceCurrency: 'USD', availability, url, itemCondition: 'https://schema.org/NewCondition', seller: { '@id': ORG_ID } };
   const ld = {
-    '@context': 'https://schema.org', '@type': 'Product', name: p.name, sku: p.sku,
-    image: p.images.map((i) => SITE_URL + i), description: metaDescription(p.shortDescription || p.description),
+    '@context': 'https://schema.org', '@type': 'Product', '@id': `${url}#product`, name: p.name, sku: p.sku || String(p.id), url,
+    image: p.images.map(abs), description: productDescription(p),
+    brand: { '@type': 'Brand', name: 'Muha Meds' },
+    category: categoryName(p.categories[0]),
     offers: p.variations.length
-      ? { '@type': 'AggregateOffer', priceCurrency: 'USD', lowPrice: (Math.min(...p.variations.map((v) => v.price)) / 100).toFixed(2), highPrice: (Math.max(...p.variations.map((v) => v.price)) / 100).toFixed(2), offerCount: p.variations.length, availability: 'https://schema.org/InStock' }
-      : { '@type': 'Offer', priceCurrency: 'USD', price: (p.price / 100).toFixed(2), availability: p.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: `${SITE_URL}/product/${p.slug}` },
+      ? { '@type': 'AggregateOffer', ...offerBase, lowPrice: (Math.min(...p.variations.map((v) => v.price)) / 100).toFixed(2), highPrice: (Math.max(...p.variations.map((v) => v.price)) / 100).toFixed(2), offerCount: p.variations.length }
+      : { '@type': 'Offer', ...offerBase, price: (p.price / 100).toFixed(2), priceValidUntil },
     ...(p.reviews.length ? {
-      aggregateRating: { '@type': 'AggregateRating', ratingValue: (p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length).toFixed(2), reviewCount: p.reviews.length },
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: (p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length).toFixed(1), reviewCount: p.reviews.length, bestRating: 5, worstRating: 1 },
+      review: p.reviews.slice(0, 5).map((r) => ({
+        '@type': 'Review', author: { '@type': 'Person', name: r.author || 'Customer' },
+        ...(r.date ? { datePublished: r.date.slice(0, 10) } : {}),
+        reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+        reviewBody: plainText(r.text).slice(0, 600),
+      })),
     } : {}),
   };
+  const crumbs = breadcrumbLd([{ name: 'Home', path: '/' }, { name: categoryName(cat), path: `/product-category/${cat}` }, { name: p.name, path: `/product/${p.slug}` }]);
   const avg = p.reviews.length ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length : null;
 
   const trust = site.home.services.slice(0, 3);
@@ -55,9 +73,9 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container-x pt-5 sm:pt-8">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, '\\u003c') }} />
-      <nav aria-label="Breadcrumb" className="mb-5 text-sm text-muted sm:mb-8">
-        <ol className="flex flex-wrap items-center gap-1.5">
+      <JsonLd data={[ld, crumbs]} />
+      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-muted sm:mb-8">
+        <ol className="flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
           <li><Link href="/" className="transition hover:text-ink">Home</Link></li><li aria-hidden className="text-line-strong">/</li>
           <li><Link href={`/product-category/${cat}`} className="transition hover:text-ink">{categoryName(cat)}</Link></li><li aria-hidden className="text-line-strong">/</li>
           <li aria-current="page" className="line-clamp-1 text-ink">{p.name}</li>
@@ -92,32 +110,34 @@ export default async function ProductPage({ params }: Props) {
           </div>
         }
       >
+        <div className="text-center sm:text-left">
         <p className="eyebrow">{p.categories.map(categoryName).join(' · ')}</p>
-        <h1 className="h-display mt-3 text-[32px] leading-[1.08] sm:text-[44px]">{p.name}</h1>
+        <h1 className="h-display mt-3 text-[28px] leading-[1.1] sm:text-[44px]">{p.name}</h1>
         {avg != null && (
           <a href="#reviews" className="mt-3 inline-flex items-center gap-2 text-sm text-muted transition hover:text-ink">
             <Stars rating={avg} size={16} /><span className="font-semibold text-ink">{avg.toFixed(1)}</span>· {p.reviews.length} review{p.reviews.length === 1 ? '' : 's'}
           </a>
         )}
+        </div>
         {p.shortDescription && <div className="rich mt-5 text-ink-soft" dangerouslySetInnerHTML={{ __html: p.shortDescription }} />}
       </ProductBuyBox>
 
       {p.description && (
-        <section className="mt-20 grid gap-6 border-t border-line pt-12 sm:mt-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16" aria-labelledby="desc">
-          <h2 id="desc" className="h-display text-3xl">Description</h2>
+        <section className="mt-14 grid gap-6 border-t border-line pt-10 sm:mt-28 sm:pt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16" aria-labelledby="desc">
+          <h2 id="desc" className="h-display text-center text-[28px] sm:text-3xl lg:text-left">Description</h2>
           <div className="rich max-w-3xl" dangerouslySetInnerHTML={{ __html: p.description }} />
         </section>
       )}
 
-      <section id="reviews" className="mt-20 grid scroll-mt-28 gap-10 border-t border-line pt-12 sm:mt-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16" aria-labelledby="reviews-title">
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <h2 id="reviews-title" className="h-display text-3xl">Customer reviews</h2>
+      <section id="reviews" className="mt-14 grid scroll-mt-28 gap-10 border-t border-line pt-10 sm:mt-28 sm:pt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16" aria-labelledby="reviews-title">
+        <div className="text-center lg:sticky lg:top-28 lg:self-start lg:text-left">
+          <h2 id="reviews-title" className="h-display text-[28px] sm:text-3xl">Customer reviews</h2>
           {avg != null && (
             <div className="mt-6">
-              <p className="flex items-end gap-3"><span className="font-display text-6xl font-bold leading-none tracking-tight">{avg.toFixed(1)}</span><span className="pb-1 text-sm text-muted">out of 5</span></p>
-              <div className="mt-3"><Stars rating={avg} size={18} /></div>
+              <p className="flex items-end justify-center gap-3 lg:justify-start"><span className="font-display text-6xl font-bold leading-none tracking-tight">{avg.toFixed(1)}</span><span className="pb-1 text-sm text-muted">out of 5</span></p>
+              <div className="mt-3 flex justify-center lg:justify-start"><Stars rating={avg} size={18} /></div>
               <p className="mt-1 text-sm text-muted">Based on {p.reviews.length} review{p.reviews.length === 1 ? '' : 's'}</p>
-              <ul className="mt-6 space-y-2" aria-label="Rating breakdown">
+              <ul className="mx-auto mt-6 max-w-sm space-y-2 lg:max-w-none" aria-label="Rating breakdown">
                 {dist.map(({ n, c }) => (
                   <li key={n} className="flex items-center gap-3 text-sm">
                     <span className="w-3 tabular-nums text-muted">{n}</span>

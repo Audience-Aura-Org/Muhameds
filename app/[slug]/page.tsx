@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPage, pages, site } from '@/lib/catalog';
 import ContactForm from '@/components/ContactForm';
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbLd, describe } from '@/lib/seo';
 import { IconMail, IconPin } from '@/components/Icons';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -17,7 +19,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = getPage((await params).slug);
   if (!p) return {};
-  return { title: p.title, description: p.seo.description || undefined, alternates: { canonical: `/${p.slug}` } };
+  const description = describe(p.seo.description, p.html, `${p.title} — ${site.name}.`);
+  return { title: p.title, description, alternates: { canonical: `/${p.slug}` }, openGraph: { title: p.title, description, url: `/${p.slug}` } };
 }
 
 export default async function ContentPage({ params }: Props) {
@@ -28,10 +31,11 @@ export default async function ContentPage({ params }: Props) {
   const body = p.html.replace(new RegExp(`^\\s*<h2>\\s*${p.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</h2>`, 'i'), '');
   return (
     <div className="container-x pt-8 sm:pt-12">
-      <header className="mx-auto max-w-3xl">
-        <h1 className="h-display text-4xl leading-[1.05] sm:text-[56px]">{p.title}</h1>
+      <JsonLd data={breadcrumbLd([{ name: 'Home', path: '/' }, { name: p.title, path: `/${p.slug}` }])} />
+      <header className="mx-auto max-w-3xl text-center sm:text-left">
+        <h1 className="h-display text-[34px] leading-[1.05] sm:text-[56px]">{p.title}</h1>
       </header>
-      <div className={`mx-auto mt-10 grid gap-10 ${isContact ? 'max-w-6xl lg:grid-cols-[1fr_1fr]' : 'max-w-3xl'}`}>
+      <div className={`mx-auto mt-6 grid gap-10 sm:mt-10 ${isContact ? 'max-w-6xl lg:grid-cols-[1fr_1fr]' : 'max-w-3xl'}`}>
         <div className="rich" dangerouslySetInnerHTML={{ __html: body }} />
         {isContact && (
           <div className="space-y-6">

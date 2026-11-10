@@ -8,10 +8,11 @@ const titleCase = (s: string) => (s === s.toUpperCase() ? s.toLowerCase().replac
 
 export default function SectionHeading({ title, eyebrow, href, linkLabel = 'View all', actions, id }: Props) {
   return (
-    <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
+    // phones: centred, link under the title; sm+: title left, link/actions right
+    <div className="mb-6 flex flex-col items-center gap-2 text-center sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-4 sm:text-left">
       <div className="min-w-0">
         {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
-        <h2 id={id} className="h-display text-[28px] leading-[1.1] sm:text-4xl">{titleCase(title)}</h2>
+        <h2 id={id} className="h-display text-[26px] leading-[1.1] sm:text-4xl">{titleCase(title)}</h2>
       </div>
       <div className="flex shrink-0 items-center gap-3">
         {href && (

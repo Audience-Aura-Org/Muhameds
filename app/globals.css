@@ -122,3 +122,10 @@
 
 /* mobile menu open: lock page scroll (on <html>, which iOS Safari respects) */
 .menu-open { overflow: hidden; }
+
+/* Desktop density: render the whole UI at 80% (like browser zoom 80%) so large screens
+   show more per viewport. Phones/tablets keep full size: 44px touch targets and 16px
+   inputs (iOS zooms into smaller ones). Breakpoints still match the real viewport width. */
+@media (min-width: 1024px) {
+  html { zoom: 0.8; }
+}
